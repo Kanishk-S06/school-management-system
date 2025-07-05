@@ -1,6 +1,9 @@
+// --- START OF FILE SideBar.js ---
+
 import * as React from 'react';
 import { Divider, ListItemButton, ListItemIcon, ListItemText, ListSubheader } from '@mui/material';
 import { Link, useLocation } from 'react-router-dom';
+import styled from 'styled-components';
 
 import HomeIcon from "@mui/icons-material/Home";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
@@ -12,74 +15,99 @@ import SupervisorAccountOutlinedIcon from '@mui/icons-material/SupervisorAccount
 import ReportIcon from '@mui/icons-material/Report';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
+const StyledListItemButton = styled(ListItemButton)`
+    && {
+        color: #bdbdbd;
+        padding: 8px 16px;
+        margin: 4px 8px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+
+        .MuiListItemIcon-root {
+            color: #bdbdbd;
+            transition: color 0.3s ease;
+        }
+
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+            .MuiListItemIcon-root {
+                color: white;
+            }
+        }
+
+        &.Mui-selected {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+            color: white;
+            border-left: 4px solid #7e57c2;
+            .MuiListItemIcon-root {
+                color: white;
+            }
+        }
+    }
+`;
+
+const StyledListSubheader = styled(ListSubheader)`
+    && {
+        background-color: transparent;
+        color: #757575;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+`;
+
 const SideBar = () => {
     const location = useLocation();
+
     return (
         <>
             <React.Fragment>
-                <ListItemButton component={Link} to="/">
-                    <ListItemIcon>
-                        <HomeIcon color={location.pathname === ("/" || "/Admin/dashboard") ? 'primary' : 'inherit'} />
-                    </ListItemIcon>
+                <StyledListItemButton component={Link} to="/" selected={location.pathname === "/" || location.pathname === "/Admin/dashboard"}>
+                    <ListItemIcon><HomeIcon /></ListItemIcon>
                     <ListItemText primary="Home" />
-                </ListItemButton>
-                <ListItemButton component={Link} to="/Admin/classes">
-                    <ListItemIcon>
-                        <ClassOutlinedIcon color={location.pathname.startsWith('/Admin/classes') ? 'primary' : 'inherit'} />
-                    </ListItemIcon>
+                </StyledListItemButton>
+                <StyledListItemButton component={Link} to="/Admin/classes" selected={location.pathname.startsWith('/Admin/classes')}>
+                    <ListItemIcon><ClassOutlinedIcon /></ListItemIcon>
                     <ListItemText primary="Classes" />
-                </ListItemButton>
-                <ListItemButton component={Link} to="/Admin/subjects">
-                    <ListItemIcon>
-                        <AssignmentIcon color={location.pathname.startsWith("/Admin/subjects") ? 'primary' : 'inherit'} />
-                    </ListItemIcon>
+                </StyledListItemButton>
+                <StyledListItemButton component={Link} to="/Admin/subjects" selected={location.pathname.startsWith("/Admin/subjects")}>
+                    <ListItemIcon><AssignmentIcon /></ListItemIcon>
                     <ListItemText primary="Subjects" />
-                </ListItemButton>
-                <ListItemButton component={Link} to="/Admin/teachers">
-                    <ListItemIcon>
-                        <SupervisorAccountOutlinedIcon color={location.pathname.startsWith("/Admin/teachers") ? 'primary' : 'inherit'} />
-                    </ListItemIcon>
+                </StyledListItemButton>
+                <StyledListItemButton component={Link} to="/Admin/teachers" selected={location.pathname.startsWith("/Admin/teachers")}>
+                    <ListItemIcon><SupervisorAccountOutlinedIcon /></ListItemIcon>
                     <ListItemText primary="Teachers" />
-                </ListItemButton>
-                <ListItemButton component={Link} to="/Admin/students">
-                    <ListItemIcon>
-                        <PersonOutlineIcon color={location.pathname.startsWith("/Admin/students") ? 'primary' : 'inherit'} />
-                    </ListItemIcon>
+                </StyledListItemButton>
+                <StyledListItemButton component={Link} to="/Admin/students" selected={location.pathname.startsWith("/Admin/students")}>
+                    <ListItemIcon><PersonOutlineIcon /></ListItemIcon>
                     <ListItemText primary="Students" />
-                </ListItemButton>
-                <ListItemButton component={Link} to="/Admin/notices">
-                    <ListItemIcon>
-                        <AnnouncementOutlinedIcon color={location.pathname.startsWith("/Admin/notices") ? 'primary' : 'inherit'} />
-                    </ListItemIcon>
+                </StyledListItemButton>
+                <StyledListItemButton component={Link} to="/Admin/notices" selected={location.pathname.startsWith("/Admin/notices")}>
+                    <ListItemIcon><AnnouncementOutlinedIcon /></ListItemIcon>
                     <ListItemText primary="Notices" />
-                </ListItemButton>
-                <ListItemButton component={Link} to="/Admin/complains">
-                    <ListItemIcon>
-                        <ReportIcon color={location.pathname.startsWith("/Admin/complains") ? 'primary' : 'inherit'} />
-                    </ListItemIcon>
+                </StyledListItemButton>
+                <StyledListItemButton component={Link} to="/Admin/complains" selected={location.pathname.startsWith("/Admin/complains")}>
+                    <ListItemIcon><ReportIcon /></ListItemIcon>
                     <ListItemText primary="Complains" />
-                </ListItemButton>
+                </StyledListItemButton>
             </React.Fragment>
-            <Divider sx={{ my: 1 }} />
+            <Divider sx={{ my: 1, borderColor: 'rgba(255, 255, 255, 0.1)' }} />
             <React.Fragment>
-                <ListSubheader component="div" inset>
+                <StyledListSubheader component="div" inset>
                     User
-                </ListSubheader>
-                <ListItemButton component={Link} to="/Admin/profile">
-                    <ListItemIcon>
-                        <AccountCircleOutlinedIcon color={location.pathname.startsWith("/Admin/profile") ? 'primary' : 'inherit'} />
-                    </ListItemIcon>
+                </StyledListSubheader>
+                <StyledListItemButton component={Link} to="/Admin/profile" selected={location.pathname.startsWith("/Admin/profile")}>
+                    <ListItemIcon><AccountCircleOutlinedIcon /></ListItemIcon>
                     <ListItemText primary="Profile" />
-                </ListItemButton>
-                <ListItemButton component={Link} to="/logout">
-                    <ListItemIcon>
-                        <ExitToAppIcon color={location.pathname.startsWith("/logout") ? 'primary' : 'inherit'} />
-                    </ListItemIcon>
+                </StyledListItemButton>
+                <StyledListItemButton component={Link} to="/logout" selected={location.pathname.startsWith("/logout")}>
+                    <ListItemIcon><ExitToAppIcon /></ListItemIcon>
                     <ListItemText primary="Logout" />
-                </ListItemButton>
+                </StyledListItemButton>
             </React.Fragment>
         </>
     )
 }
 
-export default SideBar
+export default SideBar;

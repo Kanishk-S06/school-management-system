@@ -8,6 +8,7 @@ import {
     Divider,
     IconButton,
 } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { Navigate, Route, Routes } from 'react-router-dom';
@@ -42,6 +43,160 @@ import ClassDetails from './classRelated/ClassDetails';
 import ShowClasses from './classRelated/ShowClasses';
 import AccountMenu from '../../components/AccountMenu';
 
+// Modern Dark Theme Styled Components
+const StyledContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)',
+    position: 'relative',
+    overflow: 'hidden',
+    '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: `
+            radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(120, 198, 255, 0.1) 0%, transparent 50%)
+        `,
+        zIndex: 0,
+        animation: 'bgFlow 20s ease-in-out infinite'
+    },
+    '@keyframes bgFlow': {
+        '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+        '50%': { transform: 'translateY(-20px) rotate(180deg)' }
+    }
+}));
+
+const StyledAppBar = styled(AppBar)(({ theme, open }) => ({
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+    color: '#ffffff',
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(['width', 'margin'], {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    ...(open && {
+        marginLeft: 240,
+        width: `calc(100% - 240px)`,
+        transition: theme.transitions.create(['width', 'margin'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+}));
+
+const StyledDrawer = styled(Drawer)(({ theme, open }) => ({
+    '& .MuiDrawer-paper': {
+        position: 'relative',
+        whiteSpace: 'nowrap',
+        width: 240,
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+        color: '#ffffff',
+        transition: theme.transitions.create('width', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        boxSizing: 'border-box',
+        ...(!open && {
+            overflowX: 'hidden',
+            transition: theme.transitions.create('width', {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+            }),
+            width: theme.spacing(7),
+            [theme.breakpoints.up('sm')]: {
+                width: theme.spacing(9),
+            },
+        }),
+    },
+}));
+
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    px: [1],
+    color: '#ffffff',
+    '& .MuiIconButton-root': {
+        color: '#ffffff',
+        transition: 'all 0.3s ease',
+        '&:hover': {
+            background: 'rgba(102, 126, 234, 0.2)',
+            transform: 'translateY(-2px)',
+        }
+    }
+}));
+
+const StyledMainContent = styled(Box)(({ theme }) => ({
+    position: 'relative',
+    zIndex: 1,
+    flexGrow: 1,
+    height: '100vh',
+    overflow: 'auto',
+    background: 'transparent',
+    color: '#ffffff',
+    '&::-webkit-scrollbar': {
+        width: '8px',
+    },
+    '&::-webkit-scrollbar-track': {
+        background: 'rgba(255, 255, 255, 0.1)',
+        borderRadius: '10px',
+    },
+    '&::-webkit-scrollbar-thumb': {
+        background: 'rgba(102, 126, 234, 0.5)',
+        borderRadius: '10px',
+        '&:hover': {
+            background: 'rgba(102, 126, 234, 0.7)',
+        }
+    }
+}));
+
+const StyledMenuIcon = styled(MenuIcon)(({ theme }) => ({
+    transition: 'all 0.3s ease',
+    '&:hover': {
+        transform: 'rotate(180deg) scale(1.1)',
+    }
+}));
+
+const StyledChevronIcon = styled(ChevronLeftIcon)(({ theme }) => ({
+    transition: 'all 0.3s ease',
+    '&:hover': {
+        transform: 'translateX(-3px)',
+    }
+}));
+
+const StyledDivider = styled(Divider)(({ theme }) => ({
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    margin: '10px 0',
+    background: 'linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.5), transparent)',
+    height: '1px',
+}));
+
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #ffffff 0%, #667eea 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    fontWeight: 700,
+    fontSize: '1.5rem',
+    flexGrow: 1,
+    animation: 'fadeIn 0.8s ease-out',
+    '@keyframes fadeIn': {
+        from: { opacity: 0, transform: 'translateX(-20px)' },
+        to: { opacity: 1, transform: 'translateX(0)' }
+    }
+}));
+
 const AdminDashboard = () => {
     const [open, setOpen] = useState(false);
     const toggleDrawer = () => {
@@ -50,9 +205,9 @@ const AdminDashboard = () => {
 
     return (
         <>
-            <Box sx={{ display: 'flex' }}>
+            <StyledContainer>
                 <CssBaseline />
-                <AppBar open={open} position='absolute'>
+                <StyledAppBar open={open} position='absolute'>
                     <Toolbar sx={{ pr: '24px' }}>
                         <IconButton
                             edge="start"
@@ -64,32 +219,31 @@ const AdminDashboard = () => {
                                 ...(open && { display: 'none' }),
                             }}
                         >
-                            <MenuIcon />
+                            <StyledMenuIcon />
                         </IconButton>
-                        <Typography
+                        <StyledTitle
                             component="h1"
                             variant="h6"
                             color="inherit"
                             noWrap
-                            sx={{ flexGrow: 1 }}
                         >
                             Admin Dashboard
-                        </Typography>
+                        </StyledTitle>
                         <AccountMenu />
                     </Toolbar>
-                </AppBar>
-                <Drawer variant="permanent" open={open} sx={open ? styles.drawerStyled : styles.hideDrawer}>
-                    <Toolbar sx={styles.toolBarStyled}>
+                </StyledAppBar>
+                <StyledDrawer variant="permanent" open={open}>
+                    <StyledToolbar>
                         <IconButton onClick={toggleDrawer}>
-                            <ChevronLeftIcon />
+                            <StyledChevronIcon />
                         </IconButton>
-                    </Toolbar>
-                    <Divider />
+                    </StyledToolbar>
+                    <StyledDivider />
                     <List component="nav">
                         <SideBar />
                     </List>
-                </Drawer>
-                <Box component="main" sx={styles.boxStyled}>
+                </StyledDrawer>
+                <StyledMainContent component="main">
                     <Toolbar />
                     <Routes>
                         <Route path="/" element={<AdminHomePage />} />
@@ -136,37 +290,10 @@ const AdminDashboard = () => {
 
                         <Route path="/logout" element={<Logout />} />
                     </Routes>
-                </Box>
-            </Box>
+                </StyledMainContent>
+            </StyledContainer>
         </>
     );
 }
 
 export default AdminDashboard
-
-const styles = {
-    boxStyled: {
-        backgroundColor: (theme) =>
-            theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
-        flexGrow: 1,
-        height: '100vh',
-        overflow: 'auto',
-    },
-    toolBarStyled: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'flex-end',
-        px: [1],
-    },
-    drawerStyled: {
-        display: "flex"
-    },
-    hideDrawer: {
-        display: 'flex',
-        '@media (max-width: 600px)': {
-            display: 'none',
-        },
-    },
-}

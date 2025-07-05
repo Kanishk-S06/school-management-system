@@ -13,12 +13,262 @@ import { calculateOverallAttendancePercentage, calculateSubjectAttendancePercent
 import CustomBarChart from '../../../components/CustomBarChart'
 import CustomPieChart from '../../../components/CustomPieChart'
 import { StyledTableCell, StyledTableRow } from '../../../components/styles';
+import { styled } from '@mui/material/styles';
 
 import InsertChartIcon from '@mui/icons-material/InsertChart';
 import InsertChartOutlinedIcon from '@mui/icons-material/InsertChartOutlined';
 import TableChartIcon from '@mui/icons-material/TableChart';
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
 import Popup from '../../../components/Popup';
+
+// Styled Components for Modern Dark Theme
+const StyledContainer = styled(Box)(({ theme }) => ({
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)',
+    color: '#ffffff',
+    position: 'relative',
+    overflow: 'hidden',
+    '&::before': {
+        content: '""',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: `
+            radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(120, 198, 255, 0.1) 0%, transparent 50%)
+        `,
+        zIndex: 0,
+        animation: 'bgFlow 20s ease-in-out infinite'
+    },
+    '@keyframes bgFlow': {
+        '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+        '50%': { transform: 'translateY(-20px) rotate(180deg)' }
+    }
+}));
+
+const StyledTabContext = styled(TabContext)(({ theme }) => ({
+    position: 'relative',
+    zIndex: 1,
+    '& .MuiTab-root': {
+        color: '#a0aec0',
+        fontWeight: 600,
+        fontSize: '1.1rem',
+        textTransform: 'none',
+        transition: 'all 0.3s ease',
+        '&.Mui-selected': {
+            color: '#667eea',
+            background: 'rgba(102, 126, 234, 0.1)',
+            borderRadius: '10px 10px 0 0'
+        },
+        '&:hover': {
+            color: '#ffffff',
+            background: 'rgba(255, 255, 255, 0.05)'
+        }
+    },
+    '& .MuiTabs-root': {
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        borderRadius: '15px 15px 0 0',
+        '& .MuiTabs-indicator': {
+            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            height: '3px',
+            borderRadius: '3px'
+        }
+    }
+}));
+
+const StyledTabPanel = styled('div')(({ theme }) => ({
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '0 0 20px 20px',
+    padding: '30px',
+    marginTop: '-1px',
+    boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+    animation: 'slideUp 0.8s ease-out',
+    '@keyframes slideUp': {
+        from: {
+            opacity: 0,
+            transform: 'translateY(30px)'
+        },
+        to: {
+            opacity: 1,
+            transform: 'translateY(0)'
+        }
+    }
+}));
+
+const StyledTable = styled(Table)(({ theme }) => ({
+    background: 'rgba(255, 255, 255, 0.03)',
+    backdropFilter: 'blur(10px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '15px',
+    overflow: 'hidden',
+    '& .MuiTableCell-root': {
+        color: '#ffffff',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+        padding: '16px'
+    },
+    '& .MuiTableHead-root': {
+        background: 'rgba(102, 126, 234, 0.1)',
+        '& .MuiTableCell-root': {
+            fontWeight: 600,
+            fontSize: '1.1rem',
+            color: '#ffffff'
+        }
+    },
+    '& .MuiTableRow-root': {
+        '&:hover': {
+            background: 'rgba(255, 255, 255, 0.05)'
+        }
+    }
+}));
+
+const StyledButton = styled(Button)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    borderRadius: '25px',
+    padding: '12px 30px',
+    fontSize: '1rem',
+    fontWeight: 600,
+    textTransform: 'none',
+    boxShadow: '0 8px 25px rgba(102, 126, 234, 0.3)',
+    transition: 'all 0.3s ease',
+    color: '#ffffff',
+    border: 'none',
+    '&:hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 12px 35px rgba(102, 126, 234, 0.4)',
+        background: 'linear-gradient(135deg, #7c6ce8 0%, #8a5ca8 100%)'
+    },
+    '&:disabled': {
+        background: 'rgba(255, 255, 255, 0.1)',
+        color: '#a0aec0'
+    }
+}));
+
+const StyledDeleteButton = styled(Button)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%)',
+    borderRadius: '25px',
+    padding: '12px 30px',
+    fontSize: '1rem',
+    fontWeight: 600,
+    textTransform: 'none',
+    boxShadow: '0 8px 25px rgba(255, 107, 107, 0.3)',
+    transition: 'all 0.3s ease',
+    color: '#ffffff',
+    border: 'none',
+    '&:hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 12px 35px rgba(255, 107, 107, 0.4)',
+        background: 'linear-gradient(135deg, #ff7979 0%, #f368a7 100%)'
+    }
+}));
+
+const StyledGreenButton = styled(Button)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%)',
+    borderRadius: '25px',
+    padding: '12px 30px',
+    fontSize: '1rem',
+    fontWeight: 600,
+    textTransform: 'none',
+    boxShadow: '0 8px 25px rgba(78, 205, 196, 0.3)',
+    transition: 'all 0.3s ease',
+    color: '#ffffff',
+    border: 'none',
+    '&:hover': {
+        transform: 'translateY(-2px)',
+        boxShadow: '0 12px 35px rgba(78, 205, 196, 0.4)',
+        background: 'linear-gradient(135deg, #5ee7df 0%, #66a6ff 100%)'
+    }
+}));
+
+const StyledBottomNavigation = styled(BottomNavigation)(({ theme }) => ({
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '15px 15px 0 0',
+    '& .MuiBottomNavigationAction-root': {
+        color: '#a0aec0',
+        '&.Mui-selected': {
+            color: '#667eea'
+        },
+        '&:hover': {
+            color: '#ffffff'
+        }
+    }
+}));
+
+const StyledDetailsCard = styled(Box)(({ theme }) => ({
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '20px',
+    padding: '30px',
+    marginBottom: '20px',
+    boxShadow: '0 15px 35px rgba(0, 0, 0, 0.2)',
+    transition: 'all 0.3s ease',
+    '&:hover': {
+        transform: 'translateY(-5px)',
+        boxShadow: '0 20px 45px rgba(0, 0, 0, 0.3)',
+        border: '1px solid rgba(102, 126, 234, 0.3)'
+    }
+}));
+
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #ffffff 0%, #667eea 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    fontWeight: 700,
+    fontSize: '2rem',
+    marginBottom: '1rem',
+    textAlign: 'center'
+}));
+
+const StyledSubTitle = styled(Typography)(({ theme }) => ({
+    color: '#a0aec0',
+    fontSize: '1.1rem',
+    fontWeight: 600,
+    marginBottom: '1rem'
+}));
+
+const StyledAttendancePercentage = styled(Typography)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    fontWeight: 700,
+    fontSize: '1.5rem',
+    textAlign: 'center',
+    marginTop: '20px',
+    marginBottom: '20px'
+}));
+
+const LoadingContainer = styled(Box)(({ theme }) => ({
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%)',
+    color: '#ffffff',
+    fontSize: '1.5rem',
+    fontWeight: 600,
+    '& .loading-text': {
+        background: 'linear-gradient(135deg, #ffffff 0%, #667eea 100%)',
+        WebkitBackgroundClip: 'text',
+        WebkitTextFillColor: 'transparent',
+        backgroundClip: 'text',
+        animation: 'pulse 2s ease-in-out infinite'
+    },
+    '@keyframes pulse': {
+        '0%, 100%': { opacity: 1 },
+        '50%': { opacity: 0.5 }
+    }
+}));
 
 const ViewStudent = () => {
     const [showTab, setShowTab] = useState(false);
@@ -104,11 +354,6 @@ const ViewStudent = () => {
     const deleteHandler = () => {
         setMessage("Sorry the delete function has been disabled for now.")
         setShowPopup(true)
-
-        // dispatch(deleteUser(studentID, address))
-        //     .then(() => {
-        //         navigate(-1)
-        //     })
     }
 
     const removeHandler = (id, deladdress) => {
@@ -147,8 +392,10 @@ const ViewStudent = () => {
         const renderTableSection = () => {
             return (
                 <>
-                    <h3>Attendance:</h3>
-                    <Table>
+                    <StyledTitle variant="h4">
+                        📊 Attendance Records
+                    </StyledTitle>
+                    <StyledTable>
                         <TableHead>
                             <StyledTableRow>
                                 <StyledTableCell>Subject</StyledTableCell>
@@ -168,27 +415,27 @@ const ViewStudent = () => {
                                         <StyledTableCell>{sessions}</StyledTableCell>
                                         <StyledTableCell>{subjectAttendancePercentage}%</StyledTableCell>
                                         <StyledTableCell align="center">
-                                            <Button variant="contained"
+                                            <StyledButton variant="contained" size="small" sx={{ mr: 1 }}
                                                 onClick={() => handleOpen(subId)}>
                                                 {openStates[subId] ? <KeyboardArrowUp /> : <KeyboardArrowDown />}Details
-                                            </Button>
+                                            </StyledButton>
                                             <IconButton onClick={() => removeSubAttendance(subId)}>
                                                 <DeleteIcon color="error" />
                                             </IconButton>
-                                            <Button variant="contained" sx={styles.attendanceButton}
+                                            <StyledGreenButton variant="contained" size="small" sx={{ ml: 1 }}
                                                 onClick={() => navigate(`/Admin/subject/student/attendance/${studentID}/${subId}`)}>
                                                 Change
-                                            </Button>
+                                            </StyledGreenButton>
                                         </StyledTableCell>
                                     </StyledTableRow>
                                     <StyledTableRow>
                                         <StyledTableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                                             <Collapse in={openStates[subId]} timeout="auto" unmountOnExit>
                                                 <Box sx={{ margin: 1 }}>
-                                                    <Typography variant="h6" gutterBottom component="div">
-                                                        Attendance Details
-                                                    </Typography>
-                                                    <Table size="small" aria-label="purchases">
+                                                    <StyledSubTitle variant="h6" gutterBottom component="div">
+                                                        📅 Attendance Details
+                                                    </StyledSubTitle>
+                                                    <StyledTable size="small">
                                                         <TableHead>
                                                             <StyledTableRow>
                                                                 <StyledTableCell>Date</StyledTableCell>
@@ -209,7 +456,7 @@ const ViewStudent = () => {
                                                                 )
                                                             })}
                                                         </TableBody>
-                                                    </Table>
+                                                    </StyledTable>
                                                 </Box>
                                             </Collapse>
                                         </StyledTableCell>
@@ -218,20 +465,27 @@ const ViewStudent = () => {
                             )
                         }
                         )}
-                    </Table>
-                    <div>
-                        Overall Attendance Percentage: {overallAttendancePercentage.toFixed(2)}%
-                    </div>
-                    <Button variant="contained" color="error" startIcon={<DeleteIcon />} onClick={() => removeHandler(studentID, "RemoveStudentAtten")}>Delete All</Button>
-                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/students/student/attendance/" + studentID)}>
-                        Add Attendance
-                    </Button>
+                    </StyledTable>
+                    <StyledAttendancePercentage variant="h5">
+                        📈 Overall Attendance: {overallAttendancePercentage.toFixed(2)}%
+                    </StyledAttendancePercentage>
+                    <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <StyledDeleteButton variant="contained" startIcon={<DeleteIcon />} onClick={() => removeHandler(studentID, "RemoveStudentAtten")}>
+                            Delete All
+                        </StyledDeleteButton>
+                        <StyledButton variant="contained" onClick={() => navigate("/Admin/students/student/attendance/" + studentID)}>
+                            Add Attendance
+                        </StyledButton>
+                    </Box>
                 </>
             )
         }
         const renderChartSection = () => {
             return (
                 <>
+                    <StyledTitle variant="h4">
+                        📊 Attendance Analytics
+                    </StyledTitle>
                     <CustomBarChart chartData={subjectData} dataKey="attendancePercentage" />
                 </>
             )
@@ -245,7 +499,7 @@ const ViewStudent = () => {
                         {selectedSection === 'chart' && renderChartSection()}
 
                         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-                            <BottomNavigation value={selectedSection} onChange={handleSectionChange} showLabels>
+                            <StyledBottomNavigation value={selectedSection} onChange={handleSectionChange} showLabels>
                                 <BottomNavigationAction
                                     label="Table"
                                     value="table"
@@ -256,13 +510,13 @@ const ViewStudent = () => {
                                     value="chart"
                                     icon={selectedSection === 'chart' ? <InsertChartIcon /> : <InsertChartOutlinedIcon />}
                                 />
-                            </BottomNavigation>
+                            </StyledBottomNavigation>
                         </Paper>
                     </>
                     :
-                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/students/student/attendance/" + studentID)}>
+                    <StyledButton variant="contained" onClick={() => navigate("/Admin/students/student/attendance/" + studentID)}>
                         Add Attendance
-                    </Button>
+                    </StyledButton>
                 }
             </>
         )
@@ -272,8 +526,10 @@ const ViewStudent = () => {
         const renderTableSection = () => {
             return (
                 <>
-                    <h3>Subject Marks:</h3>
-                    <Table>
+                    <StyledTitle variant="h4">
+                        📝 Subject Marks
+                    </StyledTitle>
+                    <StyledTable>
                         <TableHead>
                             <StyledTableRow>
                                 <StyledTableCell>Subject</StyledTableCell>
@@ -293,16 +549,21 @@ const ViewStudent = () => {
                                 );
                             })}
                         </TableBody>
-                    </Table>
-                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/students/student/marks/" + studentID)}>
-                        Add Marks
-                    </Button>
+                    </StyledTable>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                        <StyledButton variant="contained" onClick={() => navigate("/Admin/students/student/marks/" + studentID)}>
+                            Add Marks
+                        </StyledButton>
+                    </Box>
                 </>
             )
         }
         const renderChartSection = () => {
             return (
                 <>
+                    <StyledTitle variant="h4">
+                        📊 Marks Analytics
+                    </StyledTitle>
                     <CustomBarChart chartData={subjectMarks} dataKey="marksObtained" />
                 </>
             )
@@ -316,7 +577,7 @@ const ViewStudent = () => {
                         {selectedSection === 'chart' && renderChartSection()}
 
                         <Paper sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} elevation={3}>
-                            <BottomNavigation value={selectedSection} onChange={handleSectionChange} showLabels>
+                            <StyledBottomNavigation value={selectedSection} onChange={handleSectionChange} showLabels>
                                 <BottomNavigationAction
                                     label="Table"
                                     value="table"
@@ -327,13 +588,13 @@ const ViewStudent = () => {
                                     value="chart"
                                     icon={selectedSection === 'chart' ? <InsertChartIcon /> : <InsertChartOutlinedIcon />}
                                 />
-                            </BottomNavigation>
+                            </StyledBottomNavigation>
                         </Paper>
                     </>
                     :
-                    <Button variant="contained" sx={styles.styledButton} onClick={() => navigate("/Admin/students/student/marks/" + studentID)}>
+                    <StyledButton variant="contained" onClick={() => navigate("/Admin/students/student/marks/" + studentID)}>
                         Add Marks
-                    </Button>
+                    </StyledButton>
                 }
             </>
         )
@@ -341,58 +602,40 @@ const ViewStudent = () => {
 
     const StudentDetailsSection = () => {
         return (
-            <div>
-                Name: {userDetails.name}
-                <br />
-                Roll Number: {userDetails.rollNum}
-                <br />
-                Class: {sclassName.sclassName}
-                <br />
-                School: {studentSchool.schoolName}
-                {
-                    subjectAttendance && Array.isArray(subjectAttendance) && subjectAttendance.length > 0 && (
-                        <CustomPieChart data={chartData} />
-                    )
-                }
-                <Button variant="contained" sx={styles.styledButton} onClick={deleteHandler}>
-                    Delete
-                </Button>
-                <br />
-                {/* <Button variant="contained" sx={styles.styledButton} className="show-tab" onClick={() => { setShowTab(!showTab) }}>
+            <>
+                <StyledTitle variant="h4">
+                    👤 Student Details
+                </StyledTitle>
+                <StyledDetailsCard>
+                    <StyledSubTitle variant="h6">
+                        📛 Name: {userDetails.name}
+                    </StyledSubTitle>
+                    <StyledSubTitle variant="h6">
+                        🎯 Roll Number: {userDetails.rollNum}
+                    </StyledSubTitle>
+                    <StyledSubTitle variant="h6">
+                        🏫 Class: {sclassName.sclassName}
+                    </StyledSubTitle>
+                    <StyledSubTitle variant="h6">
+                        🎓 School: {studentSchool.schoolName}
+                    </StyledSubTitle>
                     {
-                        showTab
-                            ? <KeyboardArrowUp />
-                            : <KeyboardArrowDown />
+                        subjectAttendance && Array.isArray(subjectAttendance) && subjectAttendance.length > 0 && (
+                            <Box sx={{ mt: 3 }}>
+                                <StyledSubTitle variant="h6">
+                                    📊 Attendance Overview
+                                </StyledSubTitle>
+                                <CustomPieChart data={chartData} />
+                            </Box>
+                        )
                     }
-                    Edit Student
-                </Button>
-                <Collapse in={showTab} timeout="auto" unmountOnExit>
-                    <div className="register">
-                        <form className="registerForm" onSubmit={submitHandler}>
-                            <span className="registerTitle">Edit Details</span>
-                            <label>Name</label>
-                            <input className="registerInput" type="text" placeholder="Enter user's name..."
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
-                                autoComplete="name" required />
-
-                            <label>Roll Number</label>
-                            <input className="registerInput" type="number" placeholder="Enter user's Roll Number..."
-                                value={rollNum}
-                                onChange={(event) => setRollNum(event.target.value)}
-                                required />
-
-                            <label>Password</label>
-                            <input className="registerInput" type="password" placeholder="Enter user's password..."
-                                value={password}
-                                onChange={(event) => setPassword(event.target.value)}
-                                autoComplete="new-password" />
-
-                            <button className="registerButton" type="submit" >Update</button>
-                        </form>
-                    </div>
-                </Collapse> */}
-            </div>
+                </StyledDetailsCard>
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 3 }}>
+                    <StyledDeleteButton variant="contained" onClick={deleteHandler}>
+                        Delete Student
+                    </StyledDeleteButton>
+                </Box>
+            </>
         )
     }
 
@@ -400,56 +643,55 @@ const ViewStudent = () => {
         <>
             {loading
                 ?
-                <>
-                    <div>Loading...</div>
-                </>
+                <LoadingContainer>
+                    <div className="loading-text">Loading...</div>
+                </LoadingContainer>
                 :
-                <>
-                    <Box sx={{ width: '100%', typography: 'body1', }} >
-                        <TabContext value={value}>
+                <StyledContainer>
+                    <Box sx={{ width: '100%', typography: 'body1' }}>
+                        <StyledTabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                                <TabList onChange={handleChange} sx={{ position: 'fixed', width: '100%', bgcolor: 'background.paper', zIndex: 1 }}>
+                                <TabList 
+                                    onChange={handleChange} 
+                                    sx={{ 
+                                        position: 'fixed', 
+                                        width: '100%', 
+                                        bgcolor: 'transparent', 
+                                        zIndex: 1000,
+                                        top: 0,
+                                        left: 0,
+                                        right: 0
+                                    }}
+                                >
                                     <Tab label="Details" value="1" />
                                     <Tab label="Attendance" value="2" />
                                     <Tab label="Marks" value="3" />
                                 </TabList>
                             </Box>
-                            <Container sx={{ marginTop: "3rem", marginBottom: "4rem" }}>
+                            <Container sx={{ marginTop: "5rem", marginBottom: "4rem", position: 'relative', zIndex: 1 }}>
                                 <TabPanel value="1">
-                                    <StudentDetailsSection />
+                                    <StyledTabPanel>
+                                        <StudentDetailsSection />
+                                    </StyledTabPanel>
                                 </TabPanel>
                                 <TabPanel value="2">
-                                    <StudentAttendanceSection />
+                                    <StyledTabPanel>
+                                        <StudentAttendanceSection />
+                                    </StyledTabPanel>
                                 </TabPanel>
                                 <TabPanel value="3">
-                                    <StudentMarksSection />
+                                    <StyledTabPanel>
+                                        <StudentMarksSection />
+                                    </StyledTabPanel>
                                 </TabPanel>
                             </Container>
-                        </TabContext>
+                        </StyledTabContext>
                     </Box>
-                </>
+                </StyledContainer>
             }
             <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
-
         </>
     )
 }
 
 export default ViewStudent
-
-const styles = {
-    attendanceButton: {
-        marginLeft: "20px",
-        backgroundColor: "#270843",
-        "&:hover": {
-            backgroundColor: "#3f1068",
-        }
-    },
-    styledButton: {
-        margin: "20px",
-        backgroundColor: "#02250b",
-        "&:hover": {
-            backgroundColor: "#106312",
-        }
-    }
-}
