@@ -64,7 +64,7 @@ const StyledTabContext = styled(TabContext)(({ theme }) => ({
         width: '100%',
         zIndex: 1000,
         '& .MuiTab-root': {
-            color: '#ffffff',
+            color: 'rgba(255, 255, 255, 0.7)',
             fontSize: '1rem',
             fontWeight: 600,
             textTransform: 'none',
@@ -113,6 +113,33 @@ const StyledTabPanel = styled(TabPanel)(({ theme }) => ({
         }
     }
 }));
+
+// NEW: This wrapper will correctly style the tables
+const TableWrapper = styled(Box)(({ theme }) => ({
+    '& .MuiTableCell-root': {
+        color: '#ffffff',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+    },
+    '& .MuiTableHead-root .MuiTableCell-root': {
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        fontWeight: 'bold',
+        color: 'rgba(255, 255, 255, 0.9)',
+    },
+    '& .MuiTablePagination-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiSelect-icon': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    // This targets the pagination buttons
+    '& .MuiIconButton-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiIconButton-root.Mui-disabled': {
+        color: 'rgba(255, 255, 255, 0.3)',
+    },
+}));
+
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
     background: 'linear-gradient(135deg, #ffffff 0%, #667eea 100%)',
@@ -319,14 +346,15 @@ const ClassDetails = () => {
                         </StyledGreenButton>
                     </Box>
                     :
-                    <>
+                    // CHANGED: Added TableWrapper here
+                    <TableWrapper>
                         <Typography variant="h5" gutterBottom sx={{ color: '#ffffff !important', fontWeight: 600 }}>
                             Subjects List:
                         </Typography>
 
                         <TableTemplate buttonHaver={SubjectsButtonHaver} columns={subjectColumns} rows={subjectRows} />
                         <SpeedDialTemplate actions={subjectActions} />
-                    </>
+                    </TableWrapper>
                 }
             </>
         )
@@ -348,6 +376,8 @@ const ClassDetails = () => {
     const StudentsButtonHaver = ({ row }) => {
         return (
             <>
+                {/* Note: The StyledIconButton for delete is outside the wrapper,
+                    if it needs color changes, target it specifically */}
                 <StyledIconButton onClick={() => deleteHandler(row.id, "Student")}>
                     <PersonRemoveIcon />
                 </StyledIconButton>
@@ -395,14 +425,15 @@ const ClassDetails = () => {
                         </Box>
                     </>
                 ) : (
-                    <>
+                    // CHANGED: Added TableWrapper here
+                    <TableWrapper>
                         <Typography variant="h5" gutterBottom sx={{ color: '#ffffff !important', fontWeight: 600 }}>
                             Students List:
                         </Typography>
 
                         <TableTemplate buttonHaver={StudentsButtonHaver} columns={studentColumns} rows={studentRows} />
                         <SpeedDialTemplate actions={studentActions} />
-                    </>
+                    </TableWrapper>
                 )}
             </>
         )
@@ -470,7 +501,18 @@ const ClassDetails = () => {
                     </StyledTitle>
                     <StyledTabContext value={value}>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <TabList onChange={handleChange} sx={{ position: 'fixed', width: '100%', bgcolor: 'transparent', zIndex: 1000 }}>
+                            <TabList onChange={handleChange} sx={{
+                                position: 'fixed',
+                                width: '100%',
+                                bgcolor: 'transparent',
+                                zIndex: 1000,
+                                '& .MuiTab-root': {
+                                    color: 'rgba(255, 255, 255, 0.7)', // A visible, light color for unselected tabs
+                                },
+                                '& .Mui-selected': {
+                                    color: '#667eea', // Ensure the selected tab remains vibrant blue
+                                },
+                            }}>
                                 <Tab label="Details" value="1" />
                                 <Tab label="Subjects" value="2" />
                                 <Tab label="Students" value="3" />

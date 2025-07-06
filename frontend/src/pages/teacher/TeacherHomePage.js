@@ -87,6 +87,7 @@ const StyledNoticesPaper = styled(Paper)(({ theme }) => ({
     boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
     transition: 'all 0.3s ease',
     animation: 'slideUp 0.8s ease-out 0.6s both',
+    color: 'white',
     '&:hover': {
         transform: 'translateY(-5px)',
         boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4)',

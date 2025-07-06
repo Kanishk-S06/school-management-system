@@ -75,7 +75,30 @@ const StyledBox = styled(Box)(({ theme }) => ({
             opacity: 1,
             transform: 'translateY(0)'
         }
-    }
+    },
+    // Table Styles
+    '& .MuiTableCell-root': {
+        color: '#ffffff',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+    },
+    '& .MuiTableHead-root .MuiTableCell-root': {
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        fontWeight: 'bold',
+        color: 'rgba(255, 255, 255, 0.9)',
+    },
+    // Pagination Styles
+    '& .MuiTablePagination-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiSelect-icon': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiIconButton-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiIconButton-root.Mui-disabled': {
+        color: 'rgba(255, 255, 255, 0.3)',
+    },
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
