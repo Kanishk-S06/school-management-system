@@ -47,6 +47,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     transition: 'all 0.3s ease',
     animation: 'slideUp 0.8s ease-out',
     overflow: 'hidden',
+    padding: '2rem',
     '&:hover': {
         transform: 'translateY(-5px)',
         boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4)',
@@ -61,7 +62,29 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
             opacity: 1,
             transform: 'translateY(0)'
         }
-    }
+    },
+    // ** FIXED TABLE STYLES **
+    '& .MuiTableCell-root': {
+        color: '#ffffff',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+    },
+    '& .MuiTableHead-root .MuiTableCell-root': {
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        fontWeight: 'bold',
+        color: 'rgba(255, 255, 255, 0.9)',
+    },
+    '& .MuiTablePagination-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiSelect-icon': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiTablePagination-actions .MuiIconButton-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiTablePagination-actions .MuiIconButton-root.Mui-disabled': {
+        color: 'rgba(255, 255, 255, 0.3)',
+    },
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({

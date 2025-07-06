@@ -568,7 +568,7 @@ const Homepage = () => {
                 <FeatureTitle>Smart Analytics</FeatureTitle>
                 <FeatureDesc>
                   Get deep insights into student performance, attendance
-                  patterns, and learning trends with AI-powered analytics.
+                  patterns using graphs.
                 </FeatureDesc>
               </FeatureCard>
               <FeatureCard className="feature-card-for-js">

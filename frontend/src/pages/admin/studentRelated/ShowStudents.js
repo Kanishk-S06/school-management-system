@@ -65,21 +65,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     animation: 'slideUp 0.8s ease-out',
     overflow: 'hidden',
     color: '#ffffff',
-    '& .MuiTableCell-root': {
-        color: '#ffffff',
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-    },
-    '& .MuiTableHead-root .MuiTableCell-root': {
-        color: '#ffffff',
-        fontWeight: 600,
-        background: 'rgba(255, 255, 255, 0.05)',
-    },
-    '& .MuiTableBody-root .MuiTableCell-root': {
-        color: '#ffffff',
-    },
-    '& .MuiTableRow-root:hover': {
-        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-    },
+    padding: '2rem',
     '&:hover': {
         transform: 'translateY(-5px)',
         boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4)',
@@ -94,7 +80,29 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
             opacity: 1,
             transform: 'translateY(0)'
         }
-    }
+    },
+    // ** FIXED TABLE STYLES **
+    '& .MuiTableCell-root': {
+        color: '#ffffff',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+    },
+    '& .MuiTableHead-root .MuiTableCell-root': {
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        fontWeight: 'bold',
+        color: 'rgba(255, 255, 255, 0.9)',
+    },
+    '& .MuiTablePagination-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiSelect-icon': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiTablePagination-actions .MuiIconButton-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiTablePagination-actions .MuiIconButton-root.Mui-disabled': {
+        color: 'rgba(255, 255, 255, 0.3)',
+    },
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -144,6 +152,7 @@ const StyledBlueButton = styled(BlueButton)(({ theme }) => ({
     textTransform: 'none',
     boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)',
     transition: 'all 0.3s ease',
+    marginLeft: '8px', // Added spacing
     '&:hover': {
         transform: 'translateY(-2px)',
         boxShadow: '0 8px 25px rgba(102, 126, 234, 0.4)',
@@ -166,6 +175,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
 }));
 
 const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
+    marginLeft: '8px', // Added spacing
     '& .MuiButton-root': {
         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
         borderRadius: '25px',
@@ -185,26 +195,28 @@ const StyledButtonGroup = styled(ButtonGroup)(({ theme }) => ({
 }));
 
 const StyledPopper = styled(Popper)(({ theme }) => ({
+    zIndex: 10,
     '& .MuiPaper-root': {
         background: 'rgba(26, 26, 46, 0.95)',
         backdropFilter: 'blur(20px)',
         border: '1px solid rgba(255, 255, 255, 0.1)',
         borderRadius: '15px',
         boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)',
+        '& .MuiMenuList-root': {
+            padding: '4px',
+        },
         '& .MuiMenuItem-root': {
             color: '#ffffff',
             fontSize: '0.9rem',
             fontWeight: 500,
             padding: '12px 20px',
+            borderRadius: '10px',
+            margin: '4px',
             '&:hover': {
                 backgroundColor: 'rgba(102, 126, 234, 0.2)',
-                borderRadius: '10px',
-                margin: '4px 8px'
             },
             '&.Mui-selected': {
                 backgroundColor: 'rgba(102, 126, 234, 0.3)',
-                borderRadius: '10px',
-                margin: '4px 8px',
                 '&:hover': {
                     backgroundColor: 'rgba(102, 126, 234, 0.4)'
                 }
@@ -344,7 +356,7 @@ const ShowStudents = () => {
                 <React.Fragment>
                     <StyledButtonGroup variant="contained" ref={anchorRef} aria-label="split button">
                         <Button onClick={handleClick}>{options[selectedIndex]}</Button>
-                        <BlackButton
+                        <Button
                             size="small"
                             aria-controls={open ? 'split-button-menu' : undefined}
                             aria-expanded={open ? 'true' : undefined}
@@ -353,10 +365,9 @@ const ShowStudents = () => {
                             onClick={handleToggle}
                         >
                             {open ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-                        </BlackButton>
+                        </Button>
                     </StyledButtonGroup>
                     <StyledPopper
-                        sx={{ zIndex: 1 }}
                         open={open}
                         anchorEl={anchorRef.current}
                         role={undefined}

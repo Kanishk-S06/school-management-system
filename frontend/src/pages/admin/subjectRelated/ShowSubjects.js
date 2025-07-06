@@ -55,21 +55,7 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
     animation: 'slideUp 0.8s ease-out',
     overflow: 'hidden',
     color: '#ffffff',
-    '& .MuiTableCell-root': {
-        color: '#ffffff',
-        borderColor: 'rgba(255, 255, 255, 0.1)',
-    },
-    '& .MuiTableHead-root .MuiTableCell-root': {
-        color: '#ffffff',
-        fontWeight: 600,
-        background: 'rgba(255, 255, 255, 0.05)',
-    },
-    '& .MuiTableBody-root .MuiTableCell-root': {
-        color: '#ffffff',
-    },
-    '& .MuiTableRow-root:hover': {
-        backgroundColor: 'rgba(102, 126, 234, 0.1)',
-    },
+    padding: '2rem', // Added some padding for better spacing
     '&:hover': {
         transform: 'translateY(-5px)',
         boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4)',
@@ -84,7 +70,29 @@ const StyledPaper = styled(Paper)(({ theme }) => ({
             opacity: 1,
             transform: 'translateY(0)'
         }
-    }
+    },
+    // ** FIXED TABLE STYLES **
+    '& .MuiTableCell-root': {
+        color: '#ffffff',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.2)',
+    },
+    '& .MuiTableHead-root .MuiTableCell-root': {
+        backgroundColor: 'rgba(0, 0, 0, 0.4)',
+        fontWeight: 'bold',
+        color: 'rgba(255, 255, 255, 0.9)',
+    },
+    '& .MuiTablePagination-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiSelect-icon': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiTablePagination-actions .MuiIconButton-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+    },
+    '& .MuiTablePagination-actions .MuiIconButton-root.Mui-disabled': {
+        color: 'rgba(255, 255, 255, 0.3)',
+    },
 }));
 
 const StyledTitle = styled(Typography)(({ theme }) => ({
@@ -134,6 +142,7 @@ const StyledBlueButton = styled(BlueButton)(({ theme }) => ({
     textTransform: 'none',
     boxShadow: '0 5px 15px rgba(102, 126, 234, 0.3)',
     transition: 'all 0.3s ease',
+    marginLeft: '8px', // ** ADDED SPACING **
     '&:hover': {
         transform: 'translateY(-2px)',
         boxShadow: '0 8px 25px rgba(102, 126, 234, 0.4)',
@@ -228,7 +237,7 @@ const ShowSubjects = () => {
     const subjectColumns = [
         { id: 'subName', label: 'Sub Name', minWidth: 170 },
         { id: 'sessions', label: 'Sessions', minWidth: 170 },
-        { id: 'sclassName', label: 'Class', minWidth: 170 },
+        { id: 'sclassName', label: 'Class', minwidth: 170 },
     ]
 
     const subjectRows = subjectsList.map((subject) => {

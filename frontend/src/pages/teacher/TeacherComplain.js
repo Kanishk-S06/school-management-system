@@ -1,177 +1,181 @@
-import React, { useState } from 'react';
-import { Send, Message } from '@mui/icons-material';
+// --- START OF FILE TeacherComplain.js ---
+
+import { useEffect, useState } from 'react';
+import { Box, CircularProgress, Stack, TextField, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import Popup from '../../components/Popup';
+import { BlueButton } from '../../components/buttonStyles';
+import { addStuff } from '../../redux/userRelated/userHandle';
+import { useDispatch, useSelector } from 'react-redux';
+import { Send } from '@mui/icons-material';
+
+// Reusing the styled components from your other themed pages
+const StyledContainer = styled(Box)(({ theme }) => ({
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '2rem',
+}));
+
+const StyledFormContainer = styled(Box)(({ theme }) => ({
+    maxWidth: 600,
+    width: '100%',
+    padding: '40px',
+    background: 'rgba(255, 255, 255, 0.05)',
+    backdropFilter: 'blur(20px)',
+    border: '1px solid rgba(255, 255, 255, 0.1)',
+    borderRadius: '30px',
+    boxShadow: '0 30px 60px rgba(0, 0, 0, 0.4)',
+    position: 'relative',
+    zIndex: 1,
+    animation: 'slideUp 0.8s ease-out',
+    '@keyframes slideUp': {
+        from: {
+            opacity: 0,
+            transform: 'translateY(60px)'
+        },
+        to: {
+            opacity: 1,
+            transform: 'translateY(0)'
+        }
+    }
+}));
+
+const StyledTitle = styled(Typography)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #ffffff 0%, #667eea 100%)',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    fontWeight: 800,
+    fontSize: '2.5rem',
+    marginBottom: '2rem',
+    textAlign: 'center',
+    animation: 'fadeInUp 0.8s ease-out 0.2s both',
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+    '& .MuiOutlinedInput-root': {
+        background: 'rgba(255, 255, 255, 0.03)',
+        borderRadius: '15px',
+        '& fieldset': {
+            borderColor: 'rgba(255, 255, 255, 0.2)',
+        },
+        '&:hover fieldset': {
+            borderColor: 'rgba(102, 126, 234, 0.5)',
+        },
+        '&.Mui-focused fieldset': {
+            borderColor: '#667eea',
+        },
+        '& input, & textarea': {
+            color: '#ffffff',
+        }
+    },
+    '& .MuiInputLabel-root': {
+        color: 'rgba(255, 255, 255, 0.7)',
+        '&.Mui-focused': {
+            color: '#667eea'
+        }
+    }
+}));
+
+const StyledBlueButton = styled(BlueButton)(({ theme }) => ({
+    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    borderRadius: '15px',
+    padding: '16px 32px',
+    fontSize: '1.1rem',
+    fontWeight: 600,
+    boxShadow: '0 10px 30px rgba(102, 126, 234, 0.3)',
+    transition: 'all 0.3s ease',
+    marginTop: '2rem',
+    '&:hover': {
+        transform: 'translateY(-3px)',
+        boxShadow: '0 15px 40px rgba(102, 126, 234, 0.4)',
+    },
+    '&:disabled': {
+        background: 'rgba(255, 255, 255, 0.1)',
+    }
+}));
 
 const TeacherComplain = () => {
-    const [formData, setFormData] = useState({
-        category: '',
-        subject: '',
-        description: '',
-        priority: 'medium'
-    });
-    const [loader, setLoader] = useState(false);
+    const [complaint, setComplaint] = useState("");
+    const [date, setDate] = useState(new Date().toISOString().substring(0, 10));
 
-    const handleInputChange = (field, value) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: value
-        }));
+    const dispatch = useDispatch();
+    const { status, currentUser, error } = useSelector(state => state.user);
+    const { loader } = useSelector(state => state.user);
+
+    const address = "Complain";
+
+    const [message, setMessage] = useState("");
+    const [showPopup, setShowPopup] = useState(false);
+
+    const fields = {
+        user: currentUser._id,
+        date,
+        complaint,
+        school: currentUser.school._id,
     };
 
-    const handleSubmit = (event) => {
+    const submitHandler = (event) => {
         event.preventDefault();
-        setLoader(true);
-        
-        // Simulate API call
-        setTimeout(() => {
-            setLoader(false);
-            alert('Complaint submitted successfully!');
-            setFormData({
-                category: '',
-                subject: '',
-                description: '',
-                priority: 'medium'
-            });
-        }, 2000);
+        dispatch(addStuff(fields, address));
     };
 
-    const categories = [
-        'Student Behavior',
-        'Academic Issues',
-        'Facility Problems',
-        'Administrative Issues',
-        'Technical Support',
-        'Other'
-    ];
-
-    const priorities = [
-        { value: 'low', label: 'Low Priority' },
-        { value: 'medium', label: 'Medium Priority' },
-        { value: 'high', label: 'High Priority' },
-        { value: 'urgent', label: 'Urgent' }
-    ];
+    useEffect(() => {
+        if (status === "added") {
+            setShowPopup(true);
+            setMessage("Done Successfully");
+            setComplaint("");
+        } else if (error) {
+            setShowPopup(true);
+            setMessage("Network Error");
+        }
+    }, [status, error]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-indigo-900 text-white relative overflow-hidden">
-            {/* Animated Background */}
-            <div className="absolute inset-0 opacity-30">
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 animate-pulse"></div>
-                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-gradient-to-r from-purple-400/20 to-pink-400/20 rounded-full blur-3xl animate-bounce"></div>
-                <div className="absolute bottom-1/4 right-1/4 w-48 h-48 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 rounded-full blur-2xl animate-pulse"></div>
-            </div>
-
-            <div className="relative z-10 flex items-center justify-center min-h-screen p-8">
-                <div className="w-full max-w-2xl bg-white/10 backdrop-blur-lg border border-white/20 rounded-3xl p-8 shadow-2xl transform hover:scale-105 transition-all duration-300 hover:shadow-purple-500/25">
-                    
-                    {/* Icon */}
-                    <div className="flex justify-center mb-6">
-                        <Message className="w-16 h-16 text-purple-400 animate-bounce" />
-                    </div>
-
-                    {/* Title */}
-                    <div className="text-center mb-8">
-                        <h1 className="text-4xl font-bold bg-gradient-to-r from-white to-purple-400 bg-clip-text text-transparent mb-2">
-                            Submit a Complaint
-                        </h1>
-                        <p className="text-xl text-gray-300 font-medium">
-                            Report issues, concerns, or feedback to administration
-                        </p>
-                    </div>
-
-                    {/* Form */}
-                    <div onSubmit={handleSubmit} className="space-y-6">
-                        
-                        {/* Category Selection */}
-                        <div className="space-y-2">
-                            <label className="block text-lg font-medium text-gray-300">
-                                Complaint Category
-                            </label>
-                            <select
-                                value={formData.category}
-                                onChange={(e) => handleInputChange('category', e.target.value)}
-                                required
-                                className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl text-white text-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 hover:bg-white/10"
-                            >
-                                <option value="" className="bg-gray-800 text-white">Select a category...</option>
-                                {categories.map((category, index) => (
-                                    <option key={index} value={category} className="bg-gray-800 text-white">
-                                        {category}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Priority Selection */}
-                        <div className="space-y-2">
-                            <label className="block text-lg font-medium text-gray-300">
-                                Priority Level
-                            </label>
-                            <select
-                                value={formData.priority}
-                                onChange={(e) => handleInputChange('priority', e.target.value)}
-                                required
-                                className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl text-white text-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 hover:bg-white/10"
-                            >
-                                {priorities.map((priority, index) => (
-                                    <option key={index} value={priority.value} className="bg-gray-800 text-white">
-                                        {priority.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-
-                        {/* Subject */}
-                        <div className="space-y-2">
-                            <label className="block text-lg font-medium text-gray-300">
-                                Subject
-                            </label>
-                            <input
-                                type="text"
-                                value={formData.subject}
-                                onChange={(e) => handleInputChange('subject', e.target.value)}
-                                placeholder="Brief subject of your complaint"
-                                required
-                                className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl text-white text-lg placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 hover:bg-white/10"
-                            />
-                        </div>
-
-                        {/* Description */}
-                        <div className="space-y-2">
-                            <label className="block text-lg font-medium text-gray-300">
-                                Description
-                            </label>
-                            <textarea
-                                value={formData.description}
-                                onChange={(e) => handleInputChange('description', e.target.value)}
-                                placeholder="Provide detailed information about your complaint..."
-                                required
-                                rows={6}
-                                className="w-full px-4 py-3 bg-white/5 backdrop-blur-sm border border-white/20 rounded-xl text-white text-lg placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all duration-300 hover:bg-white/10 resize-none"
-                            />
-                        </div>
-
-                        {/* Submit Button */}
-                        <button
-                            type="submit"
-                            onClick={handleSubmit}
-                            disabled={loader}
-                            className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-2xl text-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center gap-3"
-                        >
-                            {loader ? (
-                                <>
-                                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                    Submitting...
-                                </>
-                            ) : (
-                                <>
-                                    <Send style={{ fontSize: 20 }} />
-                                    Submit Complaint
-                                </>
-                            )}
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <StyledContainer>
+            <StyledFormContainer>
+                <StyledTitle variant="h4">
+                    Submit a Complaint
+                </StyledTitle>
+                <form onSubmit={submitHandler}>
+                    <Stack spacing={3}>
+                        <StyledTextField
+                            fullWidth
+                            label="Date"
+                            type="date"
+                            value={date}
+                            onChange={(event) => setDate(event.target.value)}
+                            required
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                        />
+                        <StyledTextField
+                            fullWidth
+                            label="Write your complaint"
+                            variant="outlined"
+                            value={complaint}
+                            onChange={(event) => setComplaint(event.target.value)}
+                            required
+                            multiline
+                            rows={6}
+                        />
+                    </Stack>
+                    <StyledBlueButton
+                        fullWidth
+                        size="large"
+                        variant="contained"
+                        type="submit"
+                        disabled={loader}
+                        endIcon={<Send />}
+                    >
+                        {loader ? <CircularProgress size={24} color="inherit" /> : "Submit"}
+                    </StyledBlueButton>
+                </form>
+            </StyledFormContainer>
+            <Popup message={message} setShowPopup={setShowPopup} showPopup={showPopup} />
+        </StyledContainer>
     );
 };
 
