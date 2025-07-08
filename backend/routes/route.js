@@ -78,7 +78,7 @@ router.get("/Admin/:id", getAdminDetail);
 // router.delete("/Admin/:id", deleteAdmin)
 
 // router.put("/Admin/:id", updateAdmin)
-app.get('/health', (req, res) => res.status(200).send('OK'));
+
 
 // Student
 
